@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prospera Solutions - Stock Management</title>
+    <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <div class="logo">
+                <img src="./logos/logo.png" alt="Prospera Solutions Logo" class="header-logo">
+                <div>
+                    <h1>Prospera Solutions</h1>
+                    <p>Effortless Payment & Inventory Management</p>
+                </div>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html" onclick="loadPage('index.html')">Home</a></li>
+                    <li><a href="dashboard.html" onclick="loadPage('dashboard.html')">Dashboard</a></li>
+                    <li><a href="stock.html" onclick="loadPage('stock.html')">Stock Management</a></li>
+                    <li><a href="reports.html" onclick="loadPage('reports.html')">Reports</a></li>
+                    <li><a href="inventory.html" onclick="loadPage('inventory.html')">Inventory</a></li>
+                    <li><a href="#" onclick="showContactModal()">Contact Us</a></li>
+                    <li><a href="#" onclick="handleLogout()">Logout</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container" id="stockSection">
+        <h1>Stock Management</h1>
+        <div class="form-group">
+            <label for="itemName">Item Name:</label>
+            <input type="text" id="itemName" placeholder="Enter item name">
+        </div>
+        <div class="form-group">
+            <label for="itemQuantity">Quantity:</label>
+            <input type="number" id="itemQuantity" placeholder="Enter quantity" step="0.01">
+        </div>
+        <div class="form-group">
+            <label for="itemUnit">Unit:</label>
+            <select id="itemUnit">
+                <option value="Kg">Kg</option>
+                <option value="Qtl">Qtl</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="itemPrice">Price/Unit:</label>
+            <input type="number" id="itemPrice" placeholder="Enter price per unit" step="0.01">
+        </div>
+        <button onclick="addStockItem()">Add Stock Item</button>
+        <div id="stockList" class="item-list">
+            <h3>Current Stock</h3>
+            <div id="stockItems"></div>
+        </div>
+    </div>
+
+    <!-- Contact Us Modal -->
+    <div id="contactModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close" onclick="hideContactModal()">×</span>
+            <h2>Contact Us</h2>
+            <div class="form-group">
+                <label for="contactName">Name:</label>
+                <input type="text" id="contactName" placeholder="Enter your name">
+            </div>
+            <div class="form-group">
+                <label for="contactEmail">Email:</label>
+                <input type="email" id="contactEmail" placeholder="Enter your email">
+            </div>
+            <div class="form-group">
+                <label for="contactPhone">Phone Number:</label>
+                <input type="tel" id="contactPhone" placeholder="Enter your phone number">
+            </div>
+            <div class="form-group">
+                <label for="contactMessage">Message:</label>
+                <textarea id="contactMessage" placeholder="Enter your message"></textarea>
+            </div>
+            <button onclick="submitContactForm()">Submit</button>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="./script.js"></script>
+    <script>
+        // Check if user is logged in
+        window.addEventListener('load', function() {
+            const loggedInUser = localStorage.getItem('loggedInUser');
+            if (!loggedInUser) {
+                window.location.href = 'login.html';
+            }
+        });
+
+        // Navigation functions
+        function loadPage(pageUrl) {
+            window.location.href = pageUrl;
+        }
+
+        function handleLogout() {
+            localStorage.removeItem('loggedInUser');
+            window.location.href = 'login.html';
+        }
+
+        function showContactModal() {
+            document.getElementById('contactModal').style.display = 'block';
+        }
+
+        function hideContactModal() {
+            document.getElementById('contactModal').style.display = 'none';
+        }
+
+        function submitContactForm() {
+            const name = document.getElementById('contactName').value;
+            const email = document.getElementById('contactEmail').value;
+            const phone = document.getElementById('contactPhone').value;
+            const message = document.getElementById('contactMessage').value;
+
+            if (name && email && phone && message) {
+                alert('Thank you for contacting us! We will get back to you soon.');
+                hideContactModal();
+                document.getElementById('contactName').value = '';
+                document.getElementById('contactEmail').value = '';
+                document.getElementById('contactPhone').value = '';
+                document.getElementById('contactMessage').value = '';
+            } else {
+                alert('Please fill in all fields.');
+            }
+        }
+
+        // Stock Management Functions
+        function addStockItem() {
+            const name = document.getElementById('itemName').value;
+            const quantity = document.getElementById('itemQuantity').value;
+            const unit = document.getElementById('itemUnit').value;
+            const price = document.getElementById('itemPrice').value;
+
+            if (name && quantity && price) {
+                const stockItem = document.createElement('div');
+                stockItem.className = 'item';
+                stockItem.innerHTML = `
+                    <span>${name} - ${quantity} ${unit} @ ₹${price}</span>
+                    <button class="remove-btn" onclick="this.parentElement.remove()">Remove</button>
+                `;
+                document.getElementById('stockItems').appendChild(stockItem);
+                document.getElementById('itemName').value = '';
+                document.getElementById('itemQuantity').value = '';
+                document.getElementById('itemPrice').value = '';
+            } else {
+                alert('Please fill all fields.');
+            }
+        }
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'92cfe9be0f6c7d0f',t:'MTc0NDA5NTg5Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+</body>
+</html>

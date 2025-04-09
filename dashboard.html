@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prospera Solutions - Dashboard</title>
+    <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <div class="logo">
+                <img src="./Logos/logo.png" alt="Prospera Solutions Logo" class="header-logo">
+                <div>
+                    <h1>Prospera Solutions</h1>
+                    <p>Effortless Payment & Inventory Management</p>
+                </div>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html" onclick="loadPage('index.html')">Home</a></li>
+                    <li><a href="dashboard.html" onclick="loadPage('dashboard.html')">Dashboard</a></li>
+                    <li><a href="stock.html" onclick="loadPage('stock.html')">Stock Management</a></li>
+                    <li><a href="reports.html" onclick="loadPage('reports.html')">Reports</a></li>
+                    <li><a href="inventory.html" onclick="loadPage('inventory.html')">Inventory</a></li>
+                    <li><a href="#" onclick="showContactModal()">Contact Us</a></li>
+                    <li><a href="#" onclick="handleLogout()">Logout</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container" id="dashboardSection">
+        <h1>Dashboard</h1>
+        <div class="tabbed-section">
+            <button onclick="showTab('taxInvoice')">Tax Invoice</button>
+            <button onclick="showTab('paymentReceipt')">Payment Receipt</button>
+            <button onclick="showTab('creditNote')">Credit Note</button>
+            <button onclick="showTab('bill')">Bill</button>
+
+            <!-- Tax Invoice Tab -->
+            <div id="taxInvoice" class="tab-content" style="display: none;">
+                <h2>Tax Invoice</h2>
+                <div class="form-group">
+                    <label for="companyName">Company Name:</label>
+                    <input type="text" id="companyName" value="Prospera Solutions" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="companyAddress">Company Address:</label>
+                    <input type="text" id="companyAddress" value="123 Business Lane, India" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="companyGSTIN">GSTIN:</label>
+                    <input type="text" id="companyGSTIN" value="27AALCC1413H1ZW" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="billToName">Bill To Name:</label>
+                    <input type="text" id="billToName" placeholder="Enter name">
+                </div>
+                <div class="form-group">
+                    <label for="billToAddress">Bill To Address:</label>
+                    <input type="text" id="billToAddress" placeholder="Enter address">
+                </div>
+                <div class="form-group">
+                    <label for="billToGSTIN">Bill To GSTIN:</label>
+                    <input type="text" id="billToGSTIN" placeholder="Enter GSTIN">
+                </div>
+                <div class="form-group">
+                    <label for="shipToName">Ship To Name:</label>
+                    <input type="text" id="shipToName" placeholder="Enter ship to name">
+                </div>
+                <div class="form-group">
+                    <label for="shipToAddress">Ship To Address:</label>
+                    <input type="text" id="shipToAddress" placeholder="Enter ship to address">
+                </div>
+                <div class="form-group">
+                    <label for="invoiceNo">Invoice No:</label>
+                    <input type="text" id="invoiceNo" value="INV-001" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="invoiceDate">Date:</label>
+                    <input type="date" id="invoiceDate">
+                </div>
+                <div class="item-list">
+                    <h3>Items</h3>
+                    <div id="items">
+                        <div class="item">
+                            <input type="text" class="item-name" placeholder="Item Name">
+                            <input type="text" class="item-hsn" placeholder="HSN/SAC">
+                            <input type="number" class="item-quantity" placeholder="Quantity" step="0.01" oninput="updateTotal()">
+                            <select class="item-unit" onchange="updateTotal()">
+                                <option value="Kg">Kg</option>
+                                <option value="Qtl">Qtl</option>
+                            </select>
+                            <input type="number" class="item-price" placeholder="Price/Unit" step="0.01" oninput="updateTotal()">
+                            <input type="number" class="item-gst" value="5" placeholder="GST %" step="0.1" oninput="updateTotal()">
+                            <input type="number" class="item-amount" placeholder="Amount" readonly>
+                            <button class="remove-btn" onclick="this.parentElement.remove(); updateTotal()">Remove</button>
+                        </div>
+                    </div>
+                    <button class="add-item-btn" onclick="addItem()">Add Item</button>
+                </div>
+                <div class="form-group">
+                    <label for="sgstRate">SGST Rate (%):</label>
+                    <input type="number" id="sgstRate" value="2.5" step="0.1" oninput="updateTotal()">
+                </div>
+                <div class="form-group">
+                    <label for="cgstRate">CGST Rate (%):</label>
+                    <input type="number" id="cgstRate" value="2.5" step="0.1" oninput="updateTotal()">
+                </div>
+                <div id="totals"></div>
+                <button onclick="generateTaxInvoice()">Generate Tax Invoice</button>
+                <button onclick="generateWhatsApp('taxInvoice')">Share on WhatsApp</button>
+            </div>
+
+            <!-- Payment Receipt Tab -->
+            <div id="paymentReceipt" class="tab-content" style="display: none;">
+                <h2>Payment Receipt</h2>
+                <div class="form-group">
+                    <label for="receivedFromName">Received From Name:</label>
+                    <input type="text" id="receivedFromName" placeholder="Enter name">
+                </div>
+                <div class="form-group">
+                    <label for="receivedFromAddress">Received From Address:</label>
+                    <input type="text" id="receivedFromAddress" placeholder="Enter address">
+                </div>
+                <div class="form-group">
+                    <label for="receivedFromContact">Contact No:</label>
+                    <input type="tel" id="receivedFromContact" placeholder="Enter contact">
+                </div>
+                <div class="form-group">
+                    <label for="receiptAmount">Amount:</label>
+                    <input type="number" id="receiptAmount" placeholder="Enter amount" step="0.01" oninput="updateReceiptTotal()">
+                </div>
+                <div class="form-group">
+                    <label for="receiptNo">Receipt No:</label>
+                    <input type="text" id="receiptNo" value="REC-001" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="receiptDate">Date:</label>
+                    <input type="date" id="receiptDate">
+                </div>
+                <div id="receiptTotals"></div>
+                <button onclick="generatePaymentReceipt()">Generate Payment Receipt</button>
+                <button onclick="generateWhatsApp('paymentReceipt')">Share on WhatsApp</button>
+            </div>
+
+            <!-- Credit Note Tab -->
+            <div id="creditNote" class="tab-content" style="display: none;">
+                <h2>Credit Note</h2>
+                <div class="form-group">
+                    <label for="returnFromName">Return From Name:</label>
+                    <input type="text" id="returnFromName" placeholder="Enter name">
+                </div>
+                <div class="form-group">
+                    <label for="returnFromAddress">Return From Address:</label>
+                    <input type="text" id="returnFromAddress" placeholder="Enter address">
+                </div>
+                <div class="form-group">
+                    <label for="returnFromGSTIN">Return From GSTIN:</label>
+                    <input type="text" id="returnFromGSTIN" placeholder="Enter GSTIN">
+                </div>
+                <div class="form-group">
+                    <label for="creditNoteNo">Credit Note No:</label>
+                    <input type="text" id="creditNoteNo" value="CN-001" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="creditNoteDate">Date:</label>
+                    <input type="date" id="creditNoteDate">
+                </div>
+                <div class="item-list">
+                    <h3>Items</h3>
+                    <div id="creditItems">
+                        <div class="item">
+                            <input type="text" class="item-name" placeholder="Item Name">
+                            <input type="text" class="item-hsn" placeholder="HSN/SAC">
+                            <input type="number" class="item-quantity" placeholder="Quantity" step="0.01" oninput="updateTotal()">
+                            <select class="item-unit" onchange="updateTotal()">
+                                <option value="Kg">Kg</option>
+                                <option value="Qtl">Qtl</option>
+                            </select>
+                            <input type="number" class="item-price" placeholder="Price/Unit" step="0.01" oninput="updateTotal()">
+                            <input type="number" class="item-gst" value="5" placeholder="GST %" step="0.1" oninput="updateTotal()">
+                            <input type="number" class="item-amount" placeholder="Amount" readonly>
+                            <button class="remove-btn" onclick="this.parentElement.remove(); updateTotal()">Remove</button>
+                        </div>
+                    </div>
+                    <button class="add-item-btn" onclick="addItem('creditItems')">Add Item</button>
+                </div>
+                <div class="form-group">
+                    <label for="creditSgstRate">SGST Rate (%):</label>
+                    <input type="number" id="creditSgstRate" value="2.5" step="0.1" oninput="updateTotal()">
+                </div>
+                <div class="form-group">
+                    <label for="creditCgstRate">CGST Rate (%):</label>
+                    <input type="number" id="creditCgstRate" value="2.5" step="0.1" oninput="updateTotal()">
+                </div>
+                <div id="creditTotals"></div>
+                <button onclick="generateCreditNote()">Generate Credit Note</button>
+                <button onclick="generateWhatsApp('creditNote')">Share on WhatsApp</button>
+            </div>
+
+            <!-- Bill Tab -->
+            <div id="bill" class="tab-content">
+                <h2>Bill</h2>
+                <div class="form-group">
+                    <label for="billFromName">Bill From Name:</label>
+                    <input type="text" id="billFromName" placeholder="Enter name">
+                </div>
+                <div class="form-group">
+                    <label for="billFromAddress">Bill From Address:</label>
+                    <input type="text" id="billFromAddress" placeholder="Enter address">
+                </div>
+                <div class="form-group">
+                    <label for="billFromContact">Contact No:</label>
+                    <input type="tel" id="billFromContact" placeholder="Enter contact">
+                </div>
+                <div class="form-group">
+                    <label for="billNo">Bill No:</label>
+                    <input type="text" id="billNo" value="BILL-001" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="billDate">Date:</label>
+                    <input type="date" id="billDate">
+                </div>
+                <div class="item-list">
+                    <h3>Items</h3>
+                    <div id="billItems">
+                        <div class="item">
+                            <input type="text" class="item-name" placeholder="Item Name">
+                            <input type="text" class="item-hsn" placeholder="HSN/SAC">
+                            <input type="number" class="item-quantity" placeholder="Quantity" step="0.01" oninput="updateTotal()">
+                            <select class="item-unit" onchange="updateTotal()">
+                                <option value="Kg">Kg</option>
+                                <option value="Qtl">Qtl</option>
+                            </select>
+                            <input type="number" class="item-price" placeholder="Price/Unit" step="0.01" oninput="updateTotal()">
+                            <input type="number" class="item-amount" placeholder="Amount" readonly>
+                            <button class="remove-btn" onclick="this.parentElement.remove(); updateTotal()">Remove</button>
+                        </div>
+                    </div>
+                    <button class="add-item-btn" onclick="addItem('billItems')">Add Item</button>
+                </div>
+                <div id="billTotals"></div>
+                <button onclick="generateBill()">Generate Bill</button>
+                <button onclick="generateWhatsApp('bill')">Share on WhatsApp</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contact Us Modal -->
+    <div id="contactModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close" onclick="hideContactModal()">×</span>
+            <h2>Contact Us</h2>
+            <div class="form-group">
+                <label for="contactName">Name:</label>
+                <input type="text" id="contactName" placeholder="Enter your name">
+            </div>
+            <div class="form-group">
+                <label for="contactEmail">Email:</label>
+                <input type="email" id="contactEmail" placeholder="Enter your email">
+            </div>
+            <div class="form-group">
+                <label for="contactPhone">Phone Number:</label>
+                <input type="tel" id="contactPhone" placeholder="Enter your phone number">
+            </div>
+            <div class="form-group">
+                <label for="contactMessage">Message:</label>
+                <textarea id="contactMessage" placeholder="Enter your message"></textarea>
+            </div>
+            <button onclick="submitContactForm()">Submit</button>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
+    <script src="./script.js"></script>
+    <script>
+        // Check if user is logged in (no redirect since this is the dashboard)
+        window.addEventListener('load', function() {
+            const loggedInUser = localStorage.getItem('loggedInUser');
+            if (!loggedInUser) {
+                window.location.href = 'login.html';
+            }
+        });
+
+        // Tab navigation
+        function showTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.style.display = 'none');
+            document.getElementById(tabId).style.display = 'block';
+            updateTotal(); // Update totals when switching tabs
+        }
+        showTab('taxInvoice'); // Default tab
+
+        // Navigation functions
+        function loadPage(pageUrl) {
+            window.location.href = pageUrl;
+        }
+
+        function handleLogout() {
+            localStorage.removeItem('loggedInUser');
+            window.location.href = 'login.html';
+        }
+
+        function showContactModal() {
+            document.getElementById('contactModal').style.display = 'block';
+        }
+
+        function hideContactModal() {
+            document.getElementById('contactModal').style.display = 'none';
+        }
+
+        function submitContactForm() {
+            const name = document.getElementById('contactName').value;
+            const email = document.getElementById('contactEmail').value;
+            const phone = document.getElementById('contactPhone').value;
+            const message = document.getElementById('contactMessage').value;
+
+            if (name && email && phone && message) {
+                alert('Thank you for contacting us! We will get back to you soon.');
+                hideContactModal();
+                document.getElementById('contactName').value = '';
+                document.getElementById('contactEmail').value = '';
+                document.getElementById('contactPhone').value = '';
+                document.getElementById('contactMessage').value = '';
+            } else {
+                alert('Please fill in all fields.');
+            }
+        }
+
+        // Add item function
+        function addItem(containerId = 'items') {
+            const container = document.getElementById(containerId);
+            const item = document.createElement('div');
+            item.className = 'item';
+            item.innerHTML = `
+                <input type="text" class="item-name" placeholder="Item Name">
+                <input type="text" class="item-hsn" placeholder="HSN/SAC">
+                <input type="number" class="item-quantity" placeholder="Quantity" step="0.01" oninput="updateTotal()">
+                <select class="item-unit" onchange="updateTotal()">
+                    <option value="Kg">Kg</option>
+                    <option value="Qtl">Qtl</option>
+                </select>
+                <input type="number" class="item-price" placeholder="Price/Unit" step="0.01" oninput="updateTotal()">
+                ${containerId === 'creditItems' ? '<input type="number" class="item-gst" value="5" placeholder="GST %" step="0.1" oninput="updateTotal()">' : ''}
+                <input type="number" class="item-amount" placeholder="Amount" readonly>
+                <button class="remove-btn" onclick="this.parentElement.remove(); updateTotal()">Remove</button>
+            `;
+            container.appendChild(item);
+            updateTotal();
+        }
+
+        // Update totals for Tax Invoice and Credit Note
+        function updateTotal() {
+            let total = 0;
+            const containers = ['items', 'creditItems', 'billItems'];
+            containers.forEach(containerId => {
+                const items = document.getElementById(containerId).getElementsByClassName('item');
+                Array.from(items).forEach(item => {
+                    const quantity = parseFloat(item.getElementsByClassName('item-quantity')[0].value) || 0;
+                    const price = parseFloat(item.getElementsByClassName('item-price')[0].value) || 0;
+                    const gst = parseFloat(item.getElementsByClassName('item-gst')?.[0]?.value || 0) || 0;
+                    const amountInput = item.getElementsByClassName('item-amount')[0];
+                    const amount = quantity * price;
+                    amountInput.value = amount.toFixed(2);
+                    total += amount;
+                });
+            });
+
+            // Tax Invoice totals
+            if (document.getElementById('taxInvoice').style.display !== 'none') {
+                const sgstRate = parseFloat(document.getElementById('sgstRate').value) || 0;
+                const cgstRate = parseFloat(document.getElementById('cgstRate').value) || 0;
+                const sgst = (total * sgstRate / 100).toFixed(2);
+                const cgst = (total * cgstRate / 100).toFixed(2);
+                const grandTotal = (total + parseFloat(sgst) + parseFloat(cgst)).toFixed(2);
+                document.getElementById('totals').innerHTML = `
+                    <div>Total: ₹${total.toFixed(2)}</div>
+                    <div>SGST (${sgstRate}%): ₹${sgst}</div>
+                    <div>CGST (${cgstRate}%): ₹${cgst}</div>
+                    <div>Grand Total: ₹${grandTotal}</div>
+                `;
+            }
+
+            // Credit Note totals
+            if (document.getElementById('creditNote').style.display !== 'none') {
+                const creditSgstRate = parseFloat(document.getElementById('creditSgstRate').value) || 0;
+                const creditCgstRate = parseFloat(document.getElementById('creditCgstRate').value) || 0;
+                const creditSgst = (total * creditSgstRate / 100).toFixed(2);
+                const creditCgst = (total * creditCgstRate / 100).toFixed(2);
+                const creditGrandTotal = (total + parseFloat(creditSgst) + parseFloat(creditCgst)).toFixed(2);
+                document.getElementById('creditTotals').innerHTML = `
+                    <div>Total: ₹${total.toFixed(2)}</div>
+                    <div>SGST (${creditSgstRate}%): ₹${creditSgst}</div>
+                    <div>CGST (${creditCgstRate}%): ₹${creditCgst}</div>
+                    <div>Grand Total: ₹${creditGrandTotal}</div>
+                `;
+            }
+
+            // Bill totals
+            if (document.getElementById('bill').style.display !== 'none') {
+                document.getElementById('billTotals').innerHTML = `
+                    <div>Total: ₹${total.toFixed(2)}</div>
+                `;
+            }
+
+            // Payment Receipt total
+            if (document.getElementById('paymentReceipt').style.display !== 'none') {
+                const receiptAmount = parseFloat(document.getElementById('receiptAmount').value) || 0;
+                document.getElementById('receiptTotals').innerHTML = `
+                    <div>Total Amount: ₹${receiptAmount.toFixed(2)}</div>
+                `;
+            }
+        }
+
+        // Generate Tax Invoice
+        function generateTaxInvoice() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            let y = 10;
+            doc.setFontSize(16);
+            doc.text('Tax Invoice', 105, y, { align: 'center' });
+            y += 10;
+            doc.setFontSize(12);
+            doc.text(`Company Name: ${document.getElementById('companyName').value}`, 10, y);
+            y += 10;
+            doc.text(`Address: ${document.getElementById('companyAddress').value}`, 10, y);
+            y += 10;
+            doc.text(`GSTIN: ${document.getElementById('companyGSTIN').value}`, 10, y);
+            y += 10;
+            doc.text(`Bill To: ${document.getElementById('billToName').value}, ${document.getElementById('billToAddress').value}, GSTIN: ${document.getElementById('billToGSTIN').value}`, 10, y);
+            y += 10;
+            doc.text(`Ship To: ${document.getElementById('shipToName').value}, ${document.getElementById('shipToAddress').value}`, 10, y);
+            y += 20;
+            doc.text(`Invoice No: ${document.getElementById('invoiceNo').value}, Date: ${document.getElementById('invoiceDate').value || new Date().toISOString().split('T')[0]}`, 10, y);
+            y += 10;
+
+            const items = [];
+            document.querySelectorAll('#items .item').forEach(item => {
+                items.push([
+                    item.getElementsByClassName('item-name')[0].value,
+                    item.getElementsByClassName('item-hsn')[0].value,
+                    item.getElementsByClassName('item-quantity')[0].value,
+                    item.getElementsByClassName('item-unit')[0].value,
+                    item.getElementsByClassName('item-price')[0].value,
+                    item.getElementsByClassName('item-gst')[0].value,
+                    item.getElementsByClassName('item-amount')[0].value
+                ]);
+            });
+            doc.autoTable({
+                head: [['Item Name', 'HSN/SAC', 'Quantity', 'Unit', 'Price/Unit', 'GST %', 'Amount']],
+                body: items,
+                startY: y
+            });
+            y = doc.autoTable.previous.finalY + 10;
+            const sgstRate = parseFloat(document.getElementById('sgstRate').value) || 0;
+            const cgstRate = parseFloat(document.getElementById('cgstRate').value) || 0;
+            const total = parseFloat(document.getElementById('totals').innerText.match(/Total: ₹(\d+\.\d+)/)?.[1] || 0);
+            const sgst = (total * sgstRate / 100).toFixed(2);
+            const cgst = (total * cgstRate / 100).toFixed(2);
+            const grandTotal = (total + parseFloat(sgst) + parseFloat(cgst)).toFixed(2);
+            doc.text(`Total: ₹${total.toFixed(2)}`, 10, y);
+            y += 10;
+            doc.text(`SGST (${sgstRate}%): ₹${sgst}`, 10, y);
+            y += 10;
+            doc.text(`CGST (${cgstRate}%): ₹${cgst}`, 10, y);
+            y += 10;
+            doc.text(`Grand Total: ₹${grandTotal}`, 10, y);
+            doc.save('tax_invoice.pdf');
+        }
+
+        // Generate Payment Receipt
+        function generatePaymentReceipt() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            let y = 10;
+            doc.setFontSize(16);
+            doc.text('Payment Receipt', 105, y, { align: 'center' });
+            y += 10;
+            doc.setFontSize(12);
+            doc.text(`Received From: ${document.getElementById('receivedFromName').value}, ${document.getElementById('receivedFromAddress').value}`, 10, y);
+            y += 10;
+            doc.text(`Contact: ${document.getElementById('receivedFromContact').value}`, 10, y);
+            y += 20;
+            doc.text(`Receipt No: ${document.getElementById('receiptNo').value}, Date: ${document.getElementById('receiptDate').value || new Date().toISOString().split('T')[0]}`, 10, y);
+            y += 10;
+            const amount = parseFloat(document.getElementById('receiptAmount').value) || 0;
+            doc.text(`Amount: ₹${amount.toFixed(2)}`, 10, y);
+            doc.save('payment_receipt.pdf');
+        }
+
+        // Generate Credit Note
+        function generateCreditNote() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            let y = 10;
+            doc.setFontSize(16);
+            doc.text('Credit Note', 105, y, { align: 'center' });
+            y += 10;
+            doc.setFontSize(12);
+            doc.text(`Return From: ${document.getElementById('returnFromName').value}, ${document.getElementById('returnFromAddress').value}, GSTIN: ${document.getElementById('returnFromGSTIN').value}`, 10, y);
+            y += 20;
+            doc.text(`Credit Note No: ${document.getElementById('creditNoteNo').value}, Date: ${document.getElementById('creditNoteDate').value || new Date().toISOString().split('T')[0]}`, 10, y);
+            y += 10;
+
+            const items = [];
+            document.querySelectorAll('#creditItems .item').forEach(item => {
+                items.push([
+                    item.getElementsByClassName('item-name')[0].value,
+                    item.getElementsByClassName('item-hsn')[0].value,
+                    item.getElementsByClassName('item-quantity')[0].value,
+                    item.getElementsByClassName('item-unit')[0].value,
+                    item.getElementsByClassName('item-price')[0].value,
+                    item.getElementsByClassName('item-gst')[0].value,
+                    item.getElementsByClassName('item-amount')[0].value
+                ]);
+            });
+            doc.autoTable({
+                head: [['Item Name', 'HSN/SAC', 'Quantity', 'Unit', 'Price/Unit', 'GST %', 'Amount']],
+                body: items,
+                startY: y
+            });
+            y = doc.autoTable.previous.finalY + 10;
+            const creditSgstRate = parseFloat(document.getElementById('creditSgstRate').value) || 0;
+            const creditCgstRate = parseFloat(document.getElementById('creditCgstRate').value) || 0;
+            const total = parseFloat(document.getElementById('creditTotals').innerText.match(/Total: ₹(\d+\.\d+)/)?.[1] || 0);
+            const creditSgst = (total * creditSgstRate / 100).toFixed(2);
+            const creditCgst = (total * creditCgstRate / 100).toFixed(2);
+            const creditGrandTotal = (total + parseFloat(creditSgst) + parseFloat(creditCgst)).toFixed(2);
+            doc.text(`Total: ₹${total.toFixed(2)}`, 10, y);
+            y += 10;
+            doc.text(`SGST (${creditSgstRate}%): ₹${creditSgst}`, 10, y);
+            y += 10;
+            doc.text(`CGST (${creditCgstRate}%): ₹${creditCgst}`, 10, y);
+            y += 10;
+            doc.text(`Grand Total: ₹${creditGrandTotal}`, 10, y);
+            doc.save('credit_note.pdf');
+        }
+
+        // Generate Bill
+        function generateBill() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            let y = 10;
+            doc.setFontSize(16);
+            doc.text('Bill', 105, y, { align: 'center' });
+            y += 10;
+            doc.setFontSize(12);
+            doc.text(`Bill From: ${document.getElementById('billFromName').value}, ${document.getElementById('billFromAddress').value}, Contact: ${document.getElementById('billFromContact').value}`, 10, y);
+            y += 20;
+            doc.text(`Bill No: ${document.getElementById('billNo').value}, Date: ${document.getElementById('billDate').value || new Date().toISOString().split('T')[0]}`, 10, y);
+            y += 10;
+
+            const items = [];
+            document.querySelectorAll('#billItems .item').forEach(item => {
+                items.push([
+                    item.getElementsByClassName('item-name')[0].value,
+                    item.getElementsByClassName('item-hsn')[0].value,
+                    item.getElementsByClassName('item-quantity')[0].value,
+                    item.getElementsByClassName('item-unit')[0].value,
+                    item.getElementsByClassName('item-price')[0].value,
+                    item.getElementsByClassName('item-amount')[0].value
+                ]);
+            });
+            doc.autoTable({
+                head: [['Item Name', 'HSN/SAC', 'Quantity', 'Unit', 'Price/Unit', 'Amount']],
+                body: items,
+                startY: y
+            });
+            y = doc.autoTable.previous.finalY + 10;
+            const total = parseFloat(document.getElementById('billTotals').innerText.match(/Total: ₹(\d+\.\d+)/)?.[1] || 0);
+            doc.text(`Total: ₹${total.toFixed(2)}`, 10, y);
+            doc.save('bill.pdf');
+        }
+
+        // Generate WhatsApp message
+        function generateWhatsApp(type) {
+            let message = '';
+            switch (type) {
+                case 'taxInvoice':
+                    message = `Tax Invoice\nCompany: ${document.getElementById('companyName').value}\nBill To: ${document.getElementById('billToName').value}\nTotal: ₹${document.getElementById('totals').innerText.match(/Grand Total: ₹(\d+\.\d+)/)?.[1] || '0.00'}`;
+                    break;
+                case 'paymentReceipt':
+                    message = `Payment Receipt\nReceived From: ${document.getElementById('receivedFromName').value}\nAmount: ₹${document.getElementById('receiptAmount').value || '0.00'}`;
+                    break;
+                case 'creditNote':
+                    message = `Credit Note\nReturn From: ${document.getElementById('returnFromName').value}\nTotal: ₹${document.getElementById('creditTotals').innerText.match(/Grand Total: ₹(\d+\.\d+)/)?.[1] || '0.00'}`;
+                    break;
+                case 'bill':
+                    message = `Bill\nBill From: ${document.getElementById('billFromName').value}\nTotal: ₹${document.getElementById('billTotals').innerText.match(/Total: ₹(\d+\.\d+)/)?.[1] || '0.00'}`;
+                    break;
+            }
+            window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank');
+        }
+    </script>
+</body>
+</html>

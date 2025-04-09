@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prospera Solutions - Login</title>
+    <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+    <div class="login-container">
+        <!-- Login Form -->
+        <div id="loginForm">
+            <img src="./logos/logo.png" alt="Prospera Solutions Logo" class="login-logo">
+            <h1>Login to Prospera Solutions</h1>
+            <div class="form-group">
+                <label for="loginUsername">Username:</label>
+                <input type="text" id="loginUsername" placeholder="Enter username">
+            </div>
+            <div class="form-group">
+                <label for="loginPassword">Password:</label>
+                <input type="password" id="loginPassword" placeholder="Enter password">
+            </div>
+            <button onclick="handleLogin()">Login</button>
+            <p id="login-error" style="color: red; display: none;">Invalid username or password.</p>
+            <div class="form-toggle">
+                <p>Don't have an account? <a onclick="showSignupForm()">Sign Up</a></p>
+                <p>Forgot password? <a onclick="showForgotPasswordForm()">Reset Password</a></p>
+            </div>
+        </div>
+
+        <!-- Signup Form -->
+        <div id="signupForm" style="display: none;">
+            <img src="./logos/logo.png" alt="Prospera Solutions Logo" class="login-logo">
+            <h1>Sign Up for Prospera Solutions</h1>
+            <div class="form-group">
+                <label for="signupUsername">Username:</label>
+                <input type="text" id="signupUsername" placeholder="Choose a username">
+            </div>
+            <div class="form-group">
+                <label for="signupPassword">Password:</label>
+                <input type="password" id="signupPassword" placeholder="Choose a password">
+            </div>
+            <div class="form-group">
+                <label for="signupConfirmPassword">Confirm Password:</label>
+                <input type="password" id="signupConfirmPassword" placeholder="Confirm password">
+            </div>
+            <button onclick="handleSignup()">Sign Up</button>
+            <p id="signup-error" style="color: red; display: none;">Please fill all fields correctly.</p>
+            <div class="form-toggle">
+                <p>Already have an account? <a onclick="showLoginForm()">Login</a></p>
+            </div>
+        </div>
+
+        <!-- Forgot Password Form -->
+        <div id="forgotPasswordForm" style="display: none;">
+            <img src="./logos/logo.png" alt="Prospera Solutions Logo" class="login-logo">
+            <h1>Reset Password</h1>
+            <div class="form-group">
+                <label for="forgotUsername">Username:</label>
+                <input type="text" id="forgotUsername" placeholder="Enter your username">
+            </div>
+            <button onclick="handleForgotPassword()">Reset Password</button>
+            <p id="forgot-error" style="color: red; display: none;">Username not found.</p>
+            <p id="forgot-success" style="color: green; display: none;"></p>
+            <div class="form-toggle">
+                <p>Back to <a onclick="showLoginForm()">Login</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Form toggle functions
+        function showLoginForm() {
+            document.getElementById('loginForm').style.display = 'block';
+            document.getElementById('signupForm').style.display = 'none';
+            document.getElementById('forgotPasswordForm').style.display = 'none';
+        }
+
+        function showSignupForm() {
+            document.getElementById('loginForm').style.display = 'none';
+            document.getElementById('signupForm').style.display = 'block';
+            document.getElementById('forgotPasswordForm').style.display = 'none';
+        }
+
+        function showForgotPasswordForm() {
+            document.getElementById('loginForm').style.display = 'none';
+            document.getElementById('signupForm').style.display = 'none';
+            document.getElementById('forgotPasswordForm').style.display = 'block';
+        }
+
+        // Load users from localStorage
+        function getUsers() {
+            const users = localStorage.getItem('users');
+            return users ? JSON.parse(users) : [];
+        }
+
+        // Save users to localStorage
+        function saveUsers(users) {
+            localStorage.setItem('users', JSON.stringify(users));
+        }
+
+        // Handle Login function
+        function handleLogin() {
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+            const errorMsg = document.getElementById('login-error');
+            const users = getUsers();
+            const user = users.find(u => u.username === username && u.password === password);
+
+            if (user) {
+                localStorage.setItem('loggedInUser', username);
+                window.location.href = 'dashboard.html'; // Redirect to dashboard
+            } else {
+                errorMsg.style.display = 'block';
+            }
+        }
+
+        // Handle Signup function
+        function handleSignup() {
+            const username = document.getElementById('signupUsername').value;
+            const password = document.getElementById('signupPassword').value;
+            const confirmPassword = document.getElementById('signupConfirmPassword').value;
+            const errorMsg = document.getElementById('signup-error');
+            const users = getUsers();
+
+            if (!username || !password || password !== confirmPassword) {
+                errorMsg.textContent = "Please fill all fields correctly.";
+                errorMsg.style.display = 'block';
+                return;
+            }
+
+            if (users.some(u => u.username === username)) {
+                errorMsg.textContent = "Username already exists.";
+                errorMsg.style.display = 'block';
+                return;
+            }
+
+            users.push({ username, password });
+            saveUsers(users);
+            alert("Signup successful! Please login.");
+            showLoginForm();
+        }
+
+        // Handle Forgot Password function
+        function handleForgotPassword() {
+            const username = document.getElementById('forgotUsername').value;
+            const errorMsg = document.getElementById('forgot-error');
+            const successMsg = document.getElementById('forgot-success');
+            const users = getUsers();
+            const user = users.find(u => u.username === username);
+
+            if (user) {
+                errorMsg.style.display = 'none';
+                successMsg.textContent = `Your password is: ${user.password}`;
+                successMsg.style.display = 'block';
+            } else {
+                errorMsg.style.display = 'block';
+                successMsg.style.display = 'none';
+            }
+        }
+
+        // Clear error messages on input change
+        ['loginUsername', 'loginPassword'].forEach(id => {
+            document.getElementById(id).addEventListener('input', () => {
+                document.getElementById('login-error').style.display = 'none';
+            });
+        });
+
+        ['signupUsername', 'signupPassword', 'signupConfirmPassword'].forEach(id => {
+            document.getElementById(id).addEventListener('input', () => {
+                document.getElementById('signup-error').style.display = 'none';
+            });
+        });
+
+        document.getElementById('forgotUsername').addEventListener('input', () => {
+            document.getElementById('forgot-error').style.display = 'none';
+            document.getElementById('forgot-success').style.display = 'none';
+        });
+    </script>
+</body>
+</html>

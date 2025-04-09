@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prospera Solutions - Home</title>
+    <link rel="stylesheet" href="./styles.css">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            background: #2c3e50;
+            color: #ecf0f1;
+            overflow-x: hidden;
+        }
+
+        header {
+            background: #1a252f;
+            padding: 10px 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo img {
+            width: 30px;
+            height: 30px;
+            margin-right: 10px;
+        }
+
+        .logo h1 {
+            font-size: 24px;
+            margin: 0;
+            color: #ecf0f1;
+        }
+
+        .logo p {
+            font-size: 12px;
+            margin: 0;
+            color: #bdc3c7;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            margin: 0;
+            padding: 0;
+        }
+
+        nav ul li {
+            margin: 0 15px;
+        }
+
+        nav ul li a {
+            color: #ecf0f1;
+            text-decoration: none;
+            font-size: 16px;
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+
+        nav ul li a:hover {
+            color: #00c4cc;
+            transform: scale(1.1);
+        }
+
+        .home-screen, .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            text-align: center;
+            padding-top: 80px;
+            opacity: 0;
+            animation: fadeIn 1s forwards 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .home-screen img, .container img {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 20px;
+        }
+
+        .home-screen h1, .container h1 {
+            font-size: 32px;
+            margin: 10px 0;
+            color: #ecf0f1;
+        }
+
+        .home-screen p, .container p {
+            font-size: 16px;
+            color: #bdc3c7;
+            margin-bottom: 30px;
+        }
+
+        button {
+            padding: 12px 25px;
+            font-size: 16px;
+            background: #00c4cc;
+            border: none;
+            border-radius: 5px;
+            color: #fff;
+            cursor: pointer;
+            margin: 0 10px;
+            transition: background 0.3s ease, transform 0.3s ease;
+        }
+
+        button:hover {
+            background: #009999;
+            transform: translateY(-2px);
+        }
+
+        .container {
+            display: none;
+            max-width: 600px;
+            margin: 80px auto 20px;
+            padding: 20px;
+            background: #34495e;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .form-group, .report-group {
+            margin: 15px 0;
+            text-align: left;
+            width: 100%;
+        }
+
+        .form-group label, .report-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #ecf0f1;
+        }
+
+        .form-group input, .report-group select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #bdc3c7;
+            border-radius: 5px;
+            box-sizing: border-box;
+            background: #2c3e50;
+            color: #ecf0f1;
+            font-size: 16px;
+        }
+
+        .form-group input[readonly] {
+            background: #34495e;
+            color: #ecf0f1;
+        }
+
+        #receiptTotals, #reportPreview {
+            margin-top: 15px;
+            font-weight: bold;
+            color: #ecf0f1;
+            text-align: center;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background: #2c3e50;
+            margin: 15% auto;
+            padding: 20px;
+            width: 70%;
+            max-width: 500px;
+            border-radius: 5px;
+            color: #ecf0f1;
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .close {
+            float: right;
+            font-size: 24px;
+            color: #ecf0f1;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <div class="logo">
+                <img src="./logos/logo.png" alt="Prospera Solutions Logo" class="header-logo">
+                <div>
+                    <h1>Prospera Solutions</h1>
+                    <p>Effortless Payment Receipts</p>
+                </div>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#" onclick="showHome()">Home</a></li>
+                    <li><a href="#" onclick="showAbout()">About</a></li>
+                    <li><a href="#" onclick="showPaymentReceipt()">Payment Receipt</a></li>
+                    <li><a href="dashboard.html" onclick="loadPage('dashboard.html')">Dashboard</a></li>
+                    <li><a href="#" onclick="showStockManagement()">Stock Management</a></li>
+                    <li><a href="#" onclick="showReports()">Reports</a></li>
+                    <li><a href="#" onclick="showInventory()">Inventory</a></li>
+                    <li><a href="#" onclick="showContactModal()">Contact Us</a></li>
+                    <li><a href="#" onclick="handleLogout()">Logout</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Home Screen -->
+    <div class="home-screen" id="homeScreen">
+        <img src="./logos/logo.png" alt="Prospera Solutions Logo" class="home-logo">
+        <h1>Welcome to Prospera Solutions</h1>
+        <p>Create and manage your payment receipts with ease.</p>
+        <button onclick="showPaymentReceipt()">Create Payment Receipt</button>
+        <button onclick="loadPage('dashboard.html')">Go to Dashboard</button>
+    </div>
+
+    <!-- About Section -->
+    <div class="container" id="aboutSection" style="display: none;">
+        <h1>About Prospera Solutions</h1>
+        <p><strong>Company Overview:</strong> Prospera Solutions is a leading provider of innovative billing solutions, established in 2020. We specialize in creating user-friendly tools to streamline payment processes for businesses of all sizes.</p>
+        <p><strong>Mission:</strong> To empower businesses with efficient and reliable billing technology.</p>
+        <p><strong>Vision:</strong> To be the go-to solution for billing management worldwide.</p>
+        <p><strong>About Me:</strong> I’m John Doe, the founder of Prospera Solutions. With over 10 years of experience in software development, I’m passionate about simplifying financial workflows. Contact me at <a href="mailto:john.doe@prosperasolutions.com" style="color: #00c4cc;">john.doe@prosperasolutions.com</a>.</p>
+    </div>
+
+    <!-- Payment Receipt Section -->
+    <div class="container" id="paymentReceiptSection" style="display: none;">
+        <h1>Payment Receipt</h1>
+        <div class="form-group">
+            <label for="shopName">Company Name:</label>
+            <input type="text" id="shopName" value="Prospera Solutions" readonly>
+        </div>
+        <div class="form-group">
+            <label for="shopAddress">Company Address:</label>
+            <input type="text" id="shopAddress" value="123 Business Lane, India" readonly>
+        </div>
+        <div class="form-group">
+            <label for="shopGSTIN">GSTIN:</label>
+            <input type="text" id="shopGSTIN" value="27AALCC1413H1ZW" readonly>
+        </div>
+        <div class="form-group">
+            <label for="receivedFromName">Received From Name:</label>
+            <input type="text" id="receivedFromName" placeholder="Enter name">
+        </div>
+        <div class="form-group">
+            <label for="receivedFromAddress">Received From Address:</label>
+            <input type="text" id="receivedFromAddress" placeholder="Enter address">
+        </div>
+        <div class="form-group">
+            <label for="receivedFromContact">Contact No:</label>
+            <input type="tel" id="receivedFromContact" placeholder="Enter contact">
+        </div>
+        <div class="form-group">
+            <label for="receiptAmount">Amount:</label>
+            <input type="number" id="receiptAmount" placeholder="Enter amount" step="0.01" oninput="updateReceiptTotal()">
+        </div>
+        <div class="form-group">
+            <label for="receiptNo">Receipt No:</label>
+            <input type="text" id="receiptNo" value="REC-001" readonly>
+        </div>
+        <div class="form-group">
+            <label for="receiptDate">Date:</label>
+            <input type="date" id="receiptDate">
+        </div>
+        <div id="receiptTotals"></div>
+        <div class="button-group">
+            <button onclick="generatePaymentReceipt()">Generate Payment Receipt</button>
+            <button onclick="generateWhatsApp('paymentReceipt')">Share on WhatsApp</button>
+            <button onclick="previewPDF('paymentReceipt')">Preview PDF</button>
+        </div>
+    </div>
+
+    <!-- Stock Management Section -->
+    <div class="container" id="stockManagementSection" style="display: none;">
+        <h1>Stock Management</h1>
+        <div class="report-group">
+            <label for="stockDateRange">Date Range:</label>
+            <select id="stockDateRange">
+                <option value="all">All Time</option>
+                <option value="last30">Last 30 Days</option>
+                <option value="custom">Custom</option>
+            </select>
+        </div>
+        <div id="stockReportPreview"></div>
+        <div class="button-group">
+            <button onclick="generateStockReport()">Generate Report</button>
+            <button onclick="exportStockReport('pdf')">Export to PDF</button>
+            <button onclick="exportStockReport('excel')">Export to Excel</button>
+        </div>
+    </div>
+
+    <!-- Reports Section -->
+    <div class="container" id="reportsSection" style="display: none;">
+        <h1>Reports</h1>
+        <div class="report-group">
+            <label for="reportType">Report Type:</label>
+            <select id="reportType">
+                <option value="summary">Summary Report</option>
+                <option value="valuation">Valuation Report</option>
+            </select>
+        </div>
+        <div id="reportPreview"></div>
+        <div class="button-group">
+            <button onclick="generateReport()">Generate Report</button>
+            <button onclick="exportReport('pdf')">Export to PDF</button>
+            <button onclick="exportReport('excel')">Export to Excel</button>
+        </div>
+    </div>
+
+    <!-- Inventory Section -->
+    <div class="container" id="inventorySection" style="display: none;">
+        <h1>Inventory</h1>
+        <div class="report-group">
+            <label for="inventoryItem">Select Item:</label>
+            <select id="inventoryItem">
+                <option value="item1">Item 1</option>
+                <option value="item2">Item 2</option>
+            </select>
+        </div>
+        <div id="inventoryReportPreview"></div>
+        <div class="button-group">
+            <button onclick="generateInventoryReport()">Generate Report</button>
+            <button onclick="exportInventoryReport('pdf')">Export to PDF</button>
+            <button onclick="exportInventoryReport('excel')">Export to Excel</button>
+        </div>
+    </div>
+
+    <!-- Contact Us Modal -->
+    <div id="contactModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close" onclick="hideContactModal()">×</span>
+            <h2>Contact Us</h2>
+            <div class="form-group">
+                <label for="contactName">Name:</label>
+                <input type="text" id="contactName" placeholder="Enter your name">
+            </div>
+            <div class="form-group">
+                <label for="contactEmail">Email:</label>
+                <input type="email" id="contactEmail" placeholder="Enter your email">
+            </div>
+            <div class="form-group">
+                <label for="contactPhone">Phone Number:</label>
+                <input type="tel" id="contactPhone" placeholder="Enter your phone number">
+            </div>
+            <div class="form-group">
+                <label for="contactMessage">Message:</label>
+                <textarea id="contactMessage" placeholder="Enter your message"></textarea>
+            </div>
+            <button onclick="submitContactForm()">Submit</button>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
+    <script src="./script.js"></script>
+    <script>
+        // Redirect to login page on load if not logged in
+        window.addEventListener('load', function() {
+            const loggedInUser = localStorage.getItem('loggedInUser');
+            if (!loggedInUser) {
+                window.location.href = 'login.html';
+            } else {
+                const companyProfile = JSON.parse(localStorage.getItem('companyProfile')) || {
+                    name: "Prospera Solutions",
+                    address: "123 Business Lane, India",
+                    gstin: "27AALCC1413H1ZW"
+                };
+                document.getElementById('shopName').value = companyProfile.name;
+                document.getElementById('shopAddress').value = companyProfile.address;
+                document.getElementById('shopGSTIN').value = companyProfile.gstin;
+                showHome();
+            }
+        });
+
+        // Navigation functions
+        function showHome() {
+            document.getElementById('homeScreen').style.display = 'block';
+            document.getElementById('aboutSection').style.display = 'none';
+            document.getElementById('paymentReceiptSection').style.display = 'none';
+            document.getElementById('stockManagementSection').style.display = 'none';
+            document.getElementById('reportsSection').style.display = 'none';
+            document.getElementById('inventorySection').style.display = 'none';
+            document.getElementById('contactModal').style.display = 'none';
+        }
+
+        function showAbout() {
+            document.getElementById('homeScreen').style.display = 'none';
+            document.getElementById('aboutSection').style.display = 'block';
+            document.getElementById('paymentReceiptSection').style.display = 'none';
+            document.getElementById('stockManagementSection').style.display = 'none';
+            document.getElementById('reportsSection').style.display = 'none';
+            document.getElementById('inventorySection').style.display = 'none';
+            document.getElementById('contactModal').style.display = 'none';
+        }
+
+        function showPaymentReceipt() {
+            document.getElementById('homeScreen').style.display = 'none';
+            document.getElementById('aboutSection').style.display = 'none';
+            document.getElementById('paymentReceiptSection').style.display = 'block';
+            document.getElementById('stockManagementSection').style.display = 'none';
+            document.getElementById('reportsSection').style.display = 'none';
+            document.getElementById('inventorySection').style.display = 'none';
+            document.getElementById('contactModal').style.display = 'none';
+            updateReceiptTotal();
+        }
+
+        function showStockManagement() {
+            document.getElementById('homeScreen').style.display = 'none';
+            document.getElementById('aboutSection').style.display = 'none';
+            document.getElementById('paymentReceiptSection').style.display = 'none';
+            document.getElementById('stockManagementSection').style.display = 'block';
+            document.getElementById('reportsSection').style.display = 'none';
+            document.getElementById('inventorySection').style.display = 'none';
+            document.getElementById('contactModal').style.display = 'none';
+        }
+
+        function showReports() {
+            document.getElementById('homeScreen').style.display = 'none';
+            document.getElementById('aboutSection').style.display = 'none';
+            document.getElementById('paymentReceiptSection').style.display = 'none';
+            document.getElementById('stockManagementSection').style.display = 'none';
+            document.getElementById('reportsSection').style.display = 'block';
+            document.getElementById('inventorySection').style.display = 'none';
+            document.getElementById('contactModal').style.display = 'none';
+        }
+
+        function showInventory() {
+            document.getElementById('homeScreen').style.display = 'none';
+            document.getElementById('aboutSection').style.display = 'none';
+            document.getElementById('paymentReceiptSection').style.display = 'none';
+            document.getElementById('stockManagementSection').style.display = 'none';
+            document.getElementById('reportsSection').style.display = 'none';
+            document.getElementById('inventorySection').style.display = 'block';
+            document.getElementById('contactModal').style.display = 'none';
+        }
+
+        function loadPage(pageUrl) {
+            window.location.href = pageUrl;
+        }
+
+        function handleLogout() {
+            localStorage.removeItem('loggedInUser');
+            window.location.href = 'login.html';
+        }
+
+        // Update receipt totals
+        function updateReceiptTotal() {
+            const amount = parseFloat(document.getElementById('receiptAmount').value) || 0;
+            const totalsDiv = document.getElementById('receiptTotals');
+            totalsDiv.innerHTML = `
+                <strong>Totals:</strong><br>
+                Received: ₹${amount.toFixed(2)}<br>
+                Amount in Words: ${numberToWords(Math.round(amount))} Rupees Only<br>
+            `;
+        }
+
+        // Preview PDF for Payment Receipt
+        function previewPDF(type) {
+            const doc = new window.jspdf.jsPDF();
+            if (type === 'paymentReceipt') {
+                const companyName = document.getElementById('shopName').value;
+                const companyAddress = document.getElementById('shopAddress').value;
+                const companyGSTIN = document.getElementById('shopGSTIN').value;
+                const receivedFromName = document.getElementById('receivedFromName').value;
+                const receivedFromAddress = document.getElementById('receivedFromAddress').value;
+                const receivedFromContact = document.getElementById('receivedFromContact').value;
+                const receiptAmount = parseFloat(document.getElementById('receiptAmount').value) || 0;
+                const receiptNo = document.getElementById('receiptNo').value;
+                const receiptDate = document.getElementById('receiptDate').value;
+
+                let y = 10;
+                doc.setFontSize(16);
+                doc.text("Payment Receipt", 105, y, { align: "center" });
+                y += 10;
+                doc.setFontSize(10);
+                doc.text(`${companyName}`, 10, y);
+                y += 5;
+                doc.text(`${companyAddress}`, 10, y);
+                y += 5;
+                doc.text(`GSTIN: ${companyGSTIN}`, 10, y);
+                y += 10;
+                doc.text(`Received From: ${receivedFromName}`, 10, y);
+                y += 5;
+                doc.text(`${receivedFromAddress}`, 10, y);
+                y += 5;
+                doc.text(`Contact No: ${receivedFromContact}`, 10, y);
+                y += 10;
+                doc.text(`Receipt No: ${receiptNo} | Date: ${receiptDate}`, 10, y);
+                y += 10;
+                doc.text(`Amount: ₹${receiptAmount.toFixed(2)}`, 140, y, { align: "right" });
+                y += 10;
+                doc.text(`Amount in Words: ${numberToWords(Math.round(receiptAmount))} Rupees Only`, 10, y);
+                y += 10;
+                doc.text("For: Prospera Solutions", 140, y, { align: "right" });
+                doc.text("Authorized Signatory", 140, y + 10, { align: "right" });
+            }
+            window.open(doc.output('bloburl'), '_blank');
+        }
+
+        // Contact Modal functions
+        function showContactModal() {
+            document.getElementById('contactModal').style.display = 'block';
+        }
+
+        function hideContactModal() {
+            document.getElementById('contactModal').style.display = 'none';
+        }
+
+        function submitContactForm() {
+            const name = document.getElementById('contactName').value;
+            const email = document.getElementById('contactEmail').value;
+            const phone = document.getElementById('contactPhone').value;
+            const message = document.getElementById('contactMessage').value;
+
+            if (name && email && phone && message) {
+                alert('Thank you for contacting us! We will get back to you soon.');
+                hideContactModal();
+                document.getElementById('contactName').value = '';
+                document.getElementById('contactEmail').value = '';
+                document.getElementById('contactPhone').value = '';
+                document.getElementById('contactMessage').value = '';
+            } else {
+                alert('Please fill in all fields.');
+            }
+        }
+
+        // Mock data for reports
+        const mockInventoryData = [
+            { item: "Laptop", qtyIn: 50, qtyOut: 20, value: 50000 },
+            { item: "Mouse", qtyIn: 100, qtyOut: 60, value: 3000 }
+        ];
+
+        // Stock Management Report
+        function generateStockReport() {
+            const dateRange = document.getElementById('stockDateRange').value;
+            let reportContent = `<strong>Stock Management Report (${dateRange})</strong><br>`;
+            mockInventoryData.forEach(item => {
+                reportContent += `Item: ${item.item}, In: ${item.qtyIn}, Out: ${item.qtyOut}, Value: ₹${item.value}<br>`;
+            });
+            document.getElementById('stockReportPreview').innerHTML = reportContent;
+        }
+
+        function exportStockReport(format) {
+            const doc = new window.jspdf.jsPDF();
+            const reportContent = document.getElementById('stockReportPreview').innerHTML;
+            if (format === 'pdf') {
+                doc.text(reportContent.replace(/<[^>]+>/g, ' '), 10, 10);
+                doc.save('stock_report.pdf');
+            } else if (format === 'excel') {
+                let csv = 'Item,Qty In,Qty Out,Value\n';
+                mockInventoryData.forEach(item => {
+                    csv += `${item.item},${item.qtyIn},${item.qtyOut},${item.value}\n`;
+                });
+                const blob = new Blob([csv], { type: 'text/csv' });
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'stock_report.csv';
+                a.click();
+            }
+        }
+
+        // Reports Section
+        function generateReport() {
+            const reportType = document.getElementById('reportType').value;
+            let reportContent = `<strong>${reportType.charAt(0).toUpperCase() + reportType.slice(1)} Report</strong><br>`;
+            mockInventoryData.forEach(item => {
+                reportContent += `Item: ${item.item}, Value: ₹${item.value}<br>`;
+            });
+            document.getElementById('reportPreview').innerHTML = reportContent;
+        }
+
+        function exportReport(format) {
+            const doc = new window.jspdf.jsPDF();
+            const reportContent = document.getElementById('reportPreview').innerHTML;
+            if (format === 'pdf') {
+                doc.text(reportContent.replace(/<[^>]+>/g, ' '), 10, 10);
+                doc.save('report.pdf');
+            } else if (format === 'excel') {
+                let csv = 'Item,Value\n';
+                mockInventoryData.forEach(item => {
+                    csv += `${item.item},${item.value}\n`;
+                });
+                const blob = new Blob([csv], { type: 'text/csv' });
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'report.csv';
+                a.click();
+            }
+        }
+
+        // Inventory Report
+        function generateInventoryReport() {
+            const item = document.getElementById('inventoryItem').value;
+            const selectedItem = mockInventoryData.find(data => data.item === item);
+            let reportContent = `<strong>Inventory Report for ${item}</strong><br>`;
+            if (selectedItem) {
+                reportContent += `Qty In: ${selectedItem.qtyIn}, Qty Out: ${selectedItem.qtyOut}, Value: ₹${selectedItem.value}<br>`;
+            } else {
+                reportContent += 'No data available for selected item.';
+            }
+            document.getElementById('inventoryReportPreview').innerHTML = reportContent;
+        }
+
+        function exportInventoryReport(format) {
+            const doc = new window.jspdf.jsPDF();
+            const reportContent = document.getElementById('inventoryReportPreview').innerHTML;
+            if (format === 'pdf') {
+                doc.text(reportContent.replace(/<[^>]+>/g, ' '), 10, 10);
+                doc.save('inventory_report.pdf');
+            } else if (format === 'excel') {
+                const selectedItem = mockInventoryData.find(data => data.item === document.getElementById('inventoryItem').value);
+                let csv = 'Item,Qty In,Qty Out,Value\n';
+                if (selectedItem) {
+                    csv += `${selectedItem.item},${selectedItem.qtyIn},${selectedItem.qtyOut},${selectedItem.value}\n`;
+                }
+                const blob = new Blob([csv], { type: 'text/csv' });
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'inventory_report.csv';
+                a.click();
+            }
+        }
+    </script>
+</body>
+</html>
